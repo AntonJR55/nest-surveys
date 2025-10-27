@@ -1,5 +1,16 @@
-import { Model, Table, Column, DataType } from "sequelize-typescript";
-import type { Password, RoleName, UserId, UserName } from "../types/users";
+import {
+    Model,
+    Table,
+    Column,
+    DataType,
+    BelongsTo,
+    HasMany,
+    BelongsToMany,
+} from "sequelize-typescript";
+import type { Password, UserId, UserName, RoleName } from "../../types/users";
+import { Role } from "./roles.model";
+import { TeacherDiscipline } from "./teacher-disciplines.model";
+import { Discipline } from "../../disciplines/disciplines.model";
 
 interface IUserAttrs {
     userId: UserId;
@@ -39,4 +50,18 @@ export class User extends Model<User, IUserAttrs> {
         field: "RoleName",
     })
     roleName: RoleName;
+
+    @BelongsTo(() => Role, "roleName")
+    role: Role;
+
+    @HasMany(() => TeacherDiscipline, "teacherId")
+    teacherDisciplines: TeacherDiscipline[];
+
+    @BelongsToMany(
+        () => Discipline,
+        () => TeacherDiscipline,
+        "teacherId",
+        "disciplineId"
+    )
+    disciplines: Discipline[];
 }

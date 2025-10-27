@@ -1,14 +1,16 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { SequelizeModule } from "@nestjs/sequelize";
-import { DisciplinesService } from './disciplines/disciplines.service';
-import { DisciplinesController } from './disciplines/disciplines.controller';
-import { DisciplinesModule } from './disciplines/disciplines.module';
-import { UsersModule } from './users/users.module';
+import { DisciplinesModule } from "./disciplines/disciplines.module";
+import { UsersModule } from "./users/users.module";
+import { GroupsModule } from "./groups/groups.module";
+import { QuestionsController } from './questions/questions.controller';
+import { QuestionsService } from './questions/questions.service';
+import { QuestionsModule } from './questions/questions.module';
 
 @Module({
-    controllers: [DisciplinesController],
-    providers: [DisciplinesService],
+    controllers: [QuestionsController],
+    providers: [QuestionsService],
     imports: [
         ConfigModule.forRoot({
             envFilePath: ".env",
@@ -24,6 +26,8 @@ import { UsersModule } from './users/users.module';
         }),
         DisciplinesModule,
         UsersModule,
+        GroupsModule,
+        QuestionsModule,
     ],
 })
 export class AppModule {}

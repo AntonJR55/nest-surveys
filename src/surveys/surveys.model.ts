@@ -14,7 +14,7 @@ import type {
 } from "../types/surveys";
 import type { DisciplineId } from "../types/disciplines";
 import { Discipline } from "../disciplines/disciplines.model";
-import { User } from "../users/users.model";
+import { User } from "../users/models/users.model";
 
 interface ISurveyAttrs {
     surveyId: SurveyId;
