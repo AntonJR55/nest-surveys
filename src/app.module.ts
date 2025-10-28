@@ -4,13 +4,17 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { DisciplinesModule } from "./disciplines/disciplines.module";
 import { UsersModule } from "./users/users.module";
 import { GroupsModule } from "./groups/groups.module";
-import { QuestionsController } from './questions/questions.controller';
-import { QuestionsService } from './questions/questions.service';
-import { QuestionsModule } from './questions/questions.module';
+import { QuestionsModule } from "./questions/questions.module";
+import { RolesModule } from "./roles/roles.module";
+import { TeacherDisciplinesModule } from "./teacher-disciplines/teacher-disciplines.module";
+import { QuestionOptionsModule } from "./question-options/question-options.module";
+import { GroupDisciplinesModule } from "./group-disciplines/group-disciplines.module";
+import { StudentGradesModule } from "./student-grades/student-grades.module";
+import { GroupStudentsModule } from "./group-students/group-students.module";
 
 @Module({
-    controllers: [QuestionsController],
-    providers: [QuestionsService],
+    controllers: [],
+    providers: [],
     imports: [
         ConfigModule.forRoot({
             envFilePath: ".env",
@@ -28,6 +32,12 @@ import { QuestionsModule } from './questions/questions.module';
         UsersModule,
         GroupsModule,
         QuestionsModule,
+        RolesModule,
+        TeacherDisciplinesModule,
+        GroupDisciplinesModule,
+        QuestionOptionsModule,
+        StudentGradesModule,
+        GroupStudentsModule,
     ],
 })
 export class AppModule {}

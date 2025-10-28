@@ -6,11 +6,11 @@ import {
     BelongsToMany,
     HasMany,
 } from "sequelize-typescript";
-import type { DisciplineId, DisciplineName } from "../types/disciplines";
-import { Group } from "../groups/models/groups.model";
-import { GroupDiscipline } from "../groups/models/group-disciplines.model";
-import { User } from "../users/models/users.model";
-import { TeacherDiscipline } from "../users/models/teacher-disciplines.model";
+import type { DisciplineId, DisciplineName } from "./disciplines.type";
+import { Group } from "../groups/groups.model";
+import { GroupDiscipline } from "../group-disciplines/group-disciplines.model";
+import { User } from "../users/users.model";
+import { TeacherDiscipline } from "../teacher-disciplines/teacher-disciplines.model";
 
 interface IDisciplineAttrs {
     disciplineId: DisciplineId;

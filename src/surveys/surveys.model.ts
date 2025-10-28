@@ -4,6 +4,7 @@ import {
     Column,
     DataType,
     BelongsTo,
+    HasMany,
 } from "sequelize-typescript";
 import type {
     SurveyCreatedByTeacherID,
@@ -11,10 +12,12 @@ import type {
     SurveyEndDate,
     SurveyId,
     SurveyName,
-} from "../types/surveys";
-import type { DisciplineId } from "../types/disciplines";
+} from "./surveys.type";
+import type { DisciplineId } from "../disciplines/disciplines.type";
 import { Discipline } from "../disciplines/disciplines.model";
-import { User } from "../users/models/users.model";
+import { User } from "../users/users.model";
+import { Question } from "../questions/questions.model";
+import { StudentGrade } from "../student-grades/student-grades.model";
 
 interface ISurveyAttrs {
     surveyId: SurveyId;
@@ -76,4 +79,10 @@ export class Survey extends Model<Survey, ISurveyAttrs> {
 
     @BelongsTo(() => User, "surveyCreatedByTeacherID")
     user: User;
+
+    @HasMany(() => Question, "surveyId")
+    questions: Question[];
+
+    @HasMany(() => StudentGrade, "surveyId")
+    studentsGrades: StudentGrade[];
 }

@@ -1,5 +1,5 @@
 import { Model, Table, Column, DataType } from "sequelize-typescript";
-import type { RoleName } from "../../types/users";
+import type { RoleName } from "./roles.type";
 
 interface IRoleAttrs {
     roleName: RoleName;

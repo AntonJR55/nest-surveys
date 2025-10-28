@@ -5,10 +5,11 @@ import {
     DataType,
     BelongsTo,
 } from "sequelize-typescript";
-import type { GroupCode, GroupDisciplineId } from "../../types/groups";
-import type { DisciplineId } from "../../types/disciplines";
-import { Group } from "./groups.model";
-import { Discipline } from "../../disciplines/disciplines.model";
+import type { GroupCode } from "../groups/groups.type";
+import type { GroupDisciplineId } from "./group-disciplines.type";
+import type { DisciplineId } from "../disciplines/disciplines.type";
+import { Group } from "../groups/groups.model";
+import { Discipline } from "../disciplines/disciplines.model";
 
 interface IGroupDisciplineAttrs {
     groupDisciplineId: GroupDisciplineId;

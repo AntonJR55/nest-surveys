@@ -5,9 +5,9 @@ import {
     DataType,
     BelongsToMany,
 } from "sequelize-typescript";
-import type { GroupCode } from "../../types/groups";
-import { Discipline } from "../../disciplines/disciplines.model";
-import { GroupDiscipline } from "./group-disciplines.model";
+import type { GroupCode } from "./groups.type";
+import { Discipline } from "../disciplines/disciplines.model";
+import { GroupDiscipline } from "../group-disciplines/group-disciplines.model";
 
 interface IGroupAttrs {
     groupCode: GroupCode;

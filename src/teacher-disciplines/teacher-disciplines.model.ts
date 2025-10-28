@@ -5,10 +5,11 @@ import {
     DataType,
     BelongsTo,
 } from "sequelize-typescript";
-import type { TeacherDisciplineId, UserId } from "../../types/users";
-import type { DisciplineId } from "../../types/disciplines";
-import { User } from "./users.model";
-import { Discipline } from "../../disciplines/disciplines.model";
+import type { UserId } from "../users/users.type";
+import type { TeacherDisciplineId } from "./teacher-disciplines.type";
+import type { DisciplineId } from "../disciplines/disciplines.type";
+import { User } from "../users/users.model";
+import { Discipline } from "../disciplines/disciplines.model";
 
 interface ITeacherDisciplineAttrs {
     teacherDisciplineId: TeacherDisciplineId;
