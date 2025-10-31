@@ -40,7 +40,7 @@ export class Survey extends Model<Survey, ISurveyAttrs> {
     surveyId: SurveyId;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.STRING(100),
         allowNull: false,
         field: "SurveyName",
     })

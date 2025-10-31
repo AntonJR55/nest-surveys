@@ -12,7 +12,7 @@ import { Group } from "../groups/groups.model";
 import { User } from "../users/users.model";
 
 interface IGroupStudentAttrs {
-    groupStudentId: GroupStudentId;
+    groupStudentId?: GroupStudentId;
     groupCode: GroupCode;
     studentId: UserId;
 }
@@ -29,7 +29,7 @@ export class GroupStudent extends Model<GroupStudent, IGroupStudentAttrs> {
     groupStudentId: GroupStudentId;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.CHAR(5),
         allowNull: false,
         field: "GroupCode",
     })

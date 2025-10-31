@@ -11,6 +11,8 @@ import { QuestionOptionsModule } from "./question-options/question-options.modul
 import { GroupDisciplinesModule } from "./group-disciplines/group-disciplines.module";
 import { StudentGradesModule } from "./student-grades/student-grades.module";
 import { GroupStudentsModule } from "./group-students/group-students.module";
+import { SurveysModule } from "./surveys/surveys.module";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
     controllers: [],
@@ -26,6 +28,7 @@ import { GroupStudentsModule } from "./group-students/group-students.module";
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
+            synchronize: false,
             autoLoadModels: true,
         }),
         DisciplinesModule,
@@ -38,6 +41,8 @@ import { GroupStudentsModule } from "./group-students/group-students.module";
         QuestionOptionsModule,
         StudentGradesModule,
         GroupStudentsModule,
+        SurveysModule,
+        AuthModule,
     ],
 })
 export class AppModule {}

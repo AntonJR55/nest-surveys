@@ -12,7 +12,7 @@ import { Group } from "../groups/groups.model";
 import { Discipline } from "../disciplines/disciplines.model";
 
 interface IGroupDisciplineAttrs {
-    groupDisciplineId: GroupDisciplineId;
+    groupDisciplineId?: GroupDisciplineId;
     groupCode: GroupCode;
     disciplineId: DisciplineId;
 }
@@ -32,7 +32,7 @@ export class GroupDiscipline extends Model<
     groupDisciplineId: GroupDisciplineId;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.CHAR(5),
         allowNull: false,
         field: "GroupCode",
     })
@@ -45,9 +45,9 @@ export class GroupDiscipline extends Model<
     })
     disciplineId: DisciplineId;
 
-    @BelongsTo(() => Group)
+    @BelongsTo(() => Group, "groupCode")
     group: Group;
 
-    @BelongsTo(() => Discipline)
+    @BelongsTo(() => Discipline, "disciplineId")
     discipline: Discipline;
 }

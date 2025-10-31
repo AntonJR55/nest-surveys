@@ -16,7 +16,7 @@ interface IGroupAttrs {
 @Table({ tableName: "Groups", timestamps: false })
 export class Group extends Model<Group, IGroupAttrs> {
     @Column({
-        type: DataType.STRING,
+        type: DataType.CHAR(5),
         primaryKey: true,
         allowNull: false,
         field: "GroupCode",

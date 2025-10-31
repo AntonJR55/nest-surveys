@@ -12,14 +12,13 @@ import type { RoleName } from "../roles/roles.type";
 import { Role } from "../roles/roles.model";
 import { TeacherDiscipline } from "../teacher-disciplines/teacher-disciplines.model";
 import { Discipline } from "../disciplines/disciplines.model";
-import { GroupStudent } from "../group-students/group-students.model";
 import { StudentGrade } from "../student-grades/student-grades.model";
 
 interface IUserAttrs {
-    userId: UserId;
+    userId?: UserId;
     userName: UserName;
-    password: Password;
-    roleName: RoleName;
+    password?: Password;
+    roleNameEn: RoleName;
 }
 
 @Table({ tableName: "Users", timestamps: false })
@@ -34,31 +33,28 @@ export class User extends Model<User, IUserAttrs> {
     userId: UserId;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.STRING(50),
         allowNull: false,
         field: "UserName",
     })
     userName: UserName;
 
     @Column({
-        type: DataType.STRING,
-        allowNull: false,
+        type: DataType.STRING(100),
+        allowNull: true,
         field: "Password",
     })
     password: Password;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.STRING(25),
         allowNull: false,
-        field: "RoleName",
+        field: "RoleNameEN",
     })
-    roleName: RoleName;
+    roleNameEn: RoleName;
 
-    @BelongsTo(() => Role, "roleName")
+    @BelongsTo(() => Role, "roleNameEn")
     role: Role;
-
-    @BelongsTo(() => GroupStudent, "studentId")
-    groupStudent: GroupStudent;
 
     @HasMany(() => StudentGrade, "studentId")
     studentGrades: StudentGrade[];

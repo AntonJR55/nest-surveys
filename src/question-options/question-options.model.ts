@@ -5,7 +5,11 @@ import {
     DataType,
     BelongsTo,
 } from "sequelize-typescript";
-import type { OptionText, QuestionOptionId } from "./question-options.type";
+import type {
+    IsAnswer,
+    OptionText,
+    QuestionOptionId,
+} from "./question-options.type";
 import type { QuestionId } from "../questions/questions.type";
 import { Question } from "../questions/questions.model";
 
@@ -42,6 +46,14 @@ export class QuestionOption extends Model<
         field: "OptionText",
     })
     optionText: OptionText;
+
+    @Column({
+        type: DataType.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        field: "IsAnswer",
+    })
+    isAnswer: IsAnswer;
 
     @BelongsTo(() => Question, "questionId")
     question: Question;

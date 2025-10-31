@@ -6,11 +6,7 @@ import {
     BelongsTo,
     HasMany,
 } from "sequelize-typescript";
-import type {
-    QuestionAnswer,
-    QuestionId,
-    QuestionText,
-} from "./questions.type";
+import type { QuestionId, QuestionText } from "./questions.type";
 import type { SurveyId } from "../surveys/surveys.type";
 import { Survey } from "../surveys/surveys.model";
 import { QuestionOption } from "../question-options/question-options.model";
@@ -46,19 +42,9 @@ export class Question extends Model<Question, IQuestionAttrs> {
     })
     questionText: QuestionText;
 
-    @Column({
-        type: DataType.STRING,
-        allowNull: false,
-        field: "QuestionAnswer",
-    })
-    questionAnswer: QuestionAnswer;
-
     @HasMany(() => QuestionOption, "questionId")
     options: QuestionOption[];
 
     @BelongsTo(() => Survey, "surveyId")
     survey: Survey;
-
-    @BelongsTo(() => QuestionOption, "questionAnswer")
-    questionOption: QuestionOption;
 }

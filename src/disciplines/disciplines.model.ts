@@ -29,7 +29,7 @@ export class Discipline extends Model<Discipline, IDisciplineAttrs> {
     disciplineId: DisciplineId;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.STRING(100),
         allowNull: false,
         field: "DisciplineName",
     })

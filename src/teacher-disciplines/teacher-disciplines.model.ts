@@ -32,14 +32,14 @@ export class TeacherDiscipline extends Model<
     teacherDisciplineId: TeacherDisciplineId;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.INTEGER,
         allowNull: false,
         field: "TeacherID",
     })
     teacherId: UserId;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.INTEGER,
         allowNull: false,
         field: "DisciplineID",
     })
