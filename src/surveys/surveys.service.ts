@@ -1,14 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
+import { InjectConnection, InjectModel } from "@nestjs/sequelize";
+import { Sequelize } from "sequelize";
 import { Survey } from "./surveys.model";
 import { Question } from "../questions/questions.model";
 import { QuestionOption } from "../question-options/question-options.model";
 import { CreateSurveyDto } from "./dto/create-survey.dto";
-import { Transaction } from "sequelize";
+import type { SurveyId } from "./surveys.type";
 
 @Injectable()
 export class SurveysService {
     constructor(
+        @InjectConnection() private readonly sequelize: Sequelize,
         @InjectModel(Survey)
         private surveyRepository: typeof Survey,
         @InjectModel(Question)
@@ -16,4 +18,90 @@ export class SurveysService {
         @InjectModel(QuestionOption)
         private readonly questionOptionRepository: typeof QuestionOption
     ) {}
+
+    async getSurveyData(surveyId: SurveyId) {
+        try {
+            return await this.surveyRepository.findByPk(surveyId, {
+                attributes: ["surveyId", "surveyName"],
+                include: [
+                    {
+                        model: Question,
+                        attributes: [
+                            "questionId",
+                            "questionText",
+                            "questionPoints",
+                        ],
+                        include: [
+                            {
+                                model: QuestionOption,
+                                attributes: [
+                                    "questionOptionId",
+                                    "optionText",
+                                    "isAnswer",
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            });
+        } catch (error) {
+            console.error("Error fetching survey:", error);
+            throw error;
+        }
+    }
+
+    async createSurvey(createSurveyDto: CreateSurveyDto) {
+        let transaction: any;
+
+        try {
+            transaction = await this.sequelize.transaction();
+
+            const survey = await this.surveyRepository.create(
+                {
+                    surveyName: createSurveyDto.surveyName,
+                    surveyEndDate: new Date(createSurveyDto.surveyEndDate),
+                    surveyCreatedDate: new Date(),
+                    surveyCreatedByTeacherID:
+                        createSurveyDto.surveyCreatedByTeacherID,
+                    disciplineId: createSurveyDto.disciplineId,
+                },
+                { transaction }
+            );
+
+            for (const questionDto of createSurveyDto.questions) {
+                const question = await this.questionRepository.create(
+                    {
+                        surveyId: survey.surveyId,
+                        questionText: questionDto.questionText,
+                        questionPoints: questionDto.questionPoints,
+                    },
+                    { transaction }
+                );
+
+                const questionOptions = questionDto.questionOptions.map(
+                    (optionDto) => ({
+                        questionId: question.questionId,
+                        optionText: optionDto.optionText,
+                        isAnswer: optionDto.isAnswer,
+                    })
+                );
+
+                await this.questionOptionRepository.bulkCreate(
+                    questionOptions,
+                    {
+                        transaction,
+                    }
+                );
+            }
+
+            await transaction.commit();
+
+            return {
+                message: "Опрос успешно создан",
+            };
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
+    }
 }

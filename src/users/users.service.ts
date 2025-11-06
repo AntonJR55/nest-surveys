@@ -333,8 +333,8 @@ export class UsersService {
                         },
                     };
                 }),
-                studentGrades: studentGrades.map((studentGrade) => {
-                    const gradePlain = studentGrade.get({ plain: true });
+                studentGrades: studentGrades.map((grade) => {
+                    const gradePlain = grade.get({ plain: true });
                     const survey = gradePlain.survey;
 
                     return {

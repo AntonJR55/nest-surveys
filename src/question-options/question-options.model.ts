@@ -14,9 +14,10 @@ import type { QuestionId } from "../questions/questions.type";
 import { Question } from "../questions/questions.model";
 
 interface IQuestionOptionAttrs {
-    questionOptionId: QuestionOptionId;
+    questionOptionId?: QuestionOptionId;
     questionId: QuestionId;
     optionText: OptionText;
+    isAnswer: IsAnswer;
 }
 
 @Table({ tableName: "QuestionOptions", timestamps: false })

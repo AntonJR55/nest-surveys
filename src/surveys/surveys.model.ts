@@ -20,7 +20,7 @@ import { Question } from "../questions/questions.model";
 import { StudentGrade } from "../student-grades/student-grades.model";
 
 interface ISurveyAttrs {
-    surveyId: SurveyId;
+    surveyId?: SurveyId;
     surveyName: SurveyName;
     surveyEndDate: SurveyEndDate;
     surveyCreatedDate: SurveyCreatedDate;

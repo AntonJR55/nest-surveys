@@ -12,7 +12,7 @@ import { User } from "../users/users.model";
 import { Survey } from "../surveys/surveys.model";
 
 interface IStudentGradeAttrs {
-    studentGradeId: StudentGradeId;
+    studentGradeId?: StudentGradeId;
     studentId: UserId;
     surveyId: SurveyId;
     grade: Grade;
