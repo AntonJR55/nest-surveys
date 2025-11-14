@@ -222,8 +222,6 @@ export class UsersService {
                 return [];
             }
 
-            console.log(completedSurveysIds);
-
             const whereCondition: any = {
                 disciplineId: { [Op.in]: availableDisciplinesIds },
                 surveyEndDate: {

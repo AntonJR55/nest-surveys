@@ -56,16 +56,20 @@ export class SurveysService {
         try {
             transaction = await this.sequelize.transaction();
 
+            const currentDate = new Date();
+
             const survey = await this.surveyRepository.create(
                 {
                     surveyName: createSurveyDto.surveyName,
                     surveyEndDate: new Date(createSurveyDto.surveyEndDate),
-                    surveyCreatedDate: new Date(),
+                    surveyCreatedDate: currentDate,
                     surveyCreatedByTeacherID:
                         createSurveyDto.surveyCreatedByTeacherID,
                     disciplineId: createSurveyDto.disciplineId,
                 },
-                { transaction }
+                {
+                    transaction,
+                }
             );
 
             for (const questionDto of createSurveyDto.questions) {
@@ -97,7 +101,14 @@ export class SurveysService {
             await transaction.commit();
 
             return {
+                status: "success",
                 message: "Опрос успешно создан",
+                createdSurvey: {
+                    surveyId: survey.surveyId,
+                    surveyName: createSurveyDto.surveyName,
+                    surveyEndDate: createSurveyDto.surveyEndDate,
+                    surveyCreatedDate: currentDate,
+                },
             };
         } catch (error) {
             await transaction.rollback();
