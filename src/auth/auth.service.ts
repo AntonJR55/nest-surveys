@@ -17,16 +17,12 @@ export class AuthService {
     async createPassword(dto: CreatePasswordDto) {
         const user = await this.usersService.getUserByUserName(dto.userName);
         if (!user) {
-            throw new NotFoundException(
-                `Пользователь ${dto.userName} не найден`
-            );
+            throw new NotFoundException("Пользователь не найден");
         }
 
         const userJson = user.toJSON();
         if (userJson.password !== null) {
-            throw new ConflictException(
-                `Пароль для пользователя ${userJson.userName} уже создан`
-            );
+            throw new ConflictException("Пароль для пользователя уже создан");
         }
 
         const hashPassword = await bcrypt.hash(dto.password, 10);
@@ -47,9 +43,14 @@ export class AuthService {
         if (userJson.roleNameEn === "student") {
             userData =
                 await this.usersService.getStudentData(userWithoutPassword);
-        } else {
+        } else if (userJson.roleNameEn === "teacher") {
             userData =
                 await this.usersService.getTeacherData(userWithoutPassword);
+        } else if (userJson.roleNameEn === "admin") {
+            return {
+                status: "success",
+                userData: userWithoutPassword,
+            };
         }
 
         return userData;
@@ -59,14 +60,14 @@ export class AuthService {
         const user = await this.usersService.getUserByUserName(dto.userName);
         if (!user) {
             throw new UnauthorizedException(
-                "Некорректное имя пользователя или пароль"
+                "Неверное имя пользователя или пароль"
             );
         }
 
         const userJson = user.toJSON();
         if (userJson.password === null) {
             throw new PreconditionFailedException(
-                `Пароль для пользователя ${userJson.userName} не создан`
+                "Пароль для пользователя не создан"
             );
         }
 
@@ -76,7 +77,7 @@ export class AuthService {
         );
         if (!passwordEquals) {
             throw new UnauthorizedException(
-                "Некорректное имя пользователя или пароль"
+                "Неверное имя пользователя или пароль"
             );
         }
 

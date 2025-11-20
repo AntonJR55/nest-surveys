@@ -12,7 +12,7 @@ import { User } from "../users/users.model";
 import { Discipline } from "../disciplines/disciplines.model";
 
 interface ITeacherDisciplineAttrs {
-    teacherDisciplineId: TeacherDisciplineId;
+    teacherDisciplineId?: TeacherDisciplineId;
     teacherId: UserId;
     disciplineId: DisciplineId;
 }

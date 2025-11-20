@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
+import { Injectable } from "@nestjs/common";
+import { InjectConnection, InjectModel } from "@nestjs/sequelize";
 import { User } from "./users.model";
 import { CreateStudentDto } from "./dto/create-student.dto";
-import { CreateStaffDto } from "./dto/create-staff.dto";
+import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { GroupStudent } from "../group-students/group-students.model";
 import { Password, UserId, UserName } from "./users.type";
 import { Survey } from "../surveys/surveys.model";
@@ -14,48 +14,119 @@ import { GroupCode } from "../groups/groups.type";
 import { DisciplineId } from "../disciplines/disciplines.type";
 import { StudentGrade } from "../student-grades/student-grades.model";
 import { SurveyId } from "../surveys/surveys.type";
+import { Role } from "../roles/roles.model";
 
 @Injectable()
 export class UsersService {
     constructor(
+        @InjectConnection() private readonly sequelize: Sequelize,
         @InjectModel(User) private userRepository: typeof User,
         @InjectModel(GroupStudent)
         private groupStudentRepository: typeof GroupStudent
     ) {}
 
     async createStudent(dto: CreateStudentDto) {
-        const student = await this.userRepository.create({
-            userName: dto.userName,
-            roleNameEn: dto.roleNameEn,
-        });
-        const studentData = student.toJSON();
+        const transaction = await this.sequelize.transaction();
 
-        const groupStudent = await this.groupStudentRepository.create({
-            groupCode: dto.groupCode,
-            studentId: studentData.userId,
-        });
-        const groupStudentData = groupStudent.toJSON();
+        try {
+            const student = await this.userRepository.create(
+                {
+                    userName: dto.userName,
+                    roleNameEn: dto.roleNameEn,
+                },
+                { transaction }
+            );
 
-        return {
-            studentData,
-            groupStudentData,
-        };
+            const studentData = student.toJSON();
+
+            const groupStudent = await this.groupStudentRepository.create(
+                {
+                    groupCode: dto.groupCode,
+                    studentId: studentData.userId,
+                },
+                { transaction }
+            );
+
+            const groupStudentData = groupStudent.toJSON();
+
+            await transaction.commit();
+
+            return {
+                studentData,
+                groupStudentData,
+            };
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
     }
 
-    async createStaff(dto: CreateStaffDto) {
-        const staff = await this.userRepository.create(dto);
+    async createEmployee(dto: CreateEmployeeDto) {
+        try {
+            await this.userRepository.create(dto);
 
-        return staff.toJSON();
+            return {
+                status: "success",
+                message: "Пользователь успешно создан",
+            };
+        } catch (error) {
+            throw error;
+        }
     }
 
-    async getAllUsers() {
-        const users = await this.userRepository.findAll({
+    async getAllTeachers() {
+        const teachers = await this.userRepository.findAll({
+            where: {
+                roleNameEn: {
+                    [Op.eq]: "teacher",
+                },
+            },
             attributes: {
-                exclude: ["password"],
+                exclude: ["password", "roleNameEn"],
             },
         });
 
-        return users;
+        return teachers;
+    }
+
+    async getAllUsersWithGroups() {
+        const users = await this.userRepository.findAll({
+            include: [
+                {
+                    model: Role,
+                    as: "role",
+                },
+                {
+                    model: GroupStudent,
+                    as: "groupStudents",
+                    required: false,
+                },
+            ],
+        });
+
+        const usersFormatted = users.map((user) => {
+            const userData = user.toJSON();
+
+            let groupCode: string | null = null;
+            if (
+                userData.roleNameEn === "student" &&
+                userData.groupStudents?.length > 0
+            ) {
+                groupCode = userData.groupStudents[0].groupCode;
+            }
+
+            return {
+                userId: userData.userId,
+                userName: userData.userName,
+                role: {
+                    roleNameEn: userData.role?.roleNameEn,
+                    roleNameRu: userData.role?.roleNameRu,
+                },
+                groupCode: groupCode,
+            };
+        });
+
+        return usersFormatted;
     }
 
     async getUserByUserName(userName: UserName) {
@@ -100,6 +171,7 @@ export class UsersService {
         const [surveys, disciplines] = additionalData;
 
         return {
+            status: "success",
             userData: {
                 ...userWithoutPassword,
                 availableSurveys: surveys.map((s) => {
@@ -297,6 +369,7 @@ export class UsersService {
         studentGrades: any[]
     ) {
         return {
+            status: "success",
             userData: {
                 ...userWithoutPassword,
                 groupCode: groupCode,

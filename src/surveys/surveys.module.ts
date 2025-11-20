@@ -5,9 +5,17 @@ import { Survey } from "./surveys.model";
 import { Question } from "../questions/questions.model";
 import { QuestionOption } from "../question-options/question-options.model";
 import { SurveysController } from "./surveys.controller";
+import { TeacherDiscipline } from "../teacher-disciplines/teacher-disciplines.model";
 
 @Module({
-    imports: [SequelizeModule.forFeature([Survey, Question, QuestionOption])],
+    imports: [
+        SequelizeModule.forFeature([
+            Survey,
+            Question,
+            QuestionOption,
+            TeacherDiscipline,
+        ]),
+    ],
     controllers: [SurveysController],
     providers: [SurveysService],
 })
